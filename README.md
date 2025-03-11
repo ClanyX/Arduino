@@ -1,6 +1,6 @@
 ## 🚀 Introduction to Arduino
 
-![Arduino](https://img.shields.io/badge/Arduino-Platform-blue?style=for-the-badge&logo=arduino)
+[![Arduino](https://img.shields.io/badge/Arduino-Platform-blue?style=for-the-badge&logo=arduino)](https://www.arduino.cc/)
 
 ### 📌 What is Arduino?
 Arduino is an **open-source** platform for developing electronic projects. It consists of **microcontroller boards** and a development environment (Arduino IDE) that allows easy programming.
