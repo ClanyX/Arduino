@@ -48,7 +48,7 @@ This program makes the LED on **pin 13** blink.
 ---
 
 ### 📜 License
-This document is freely available under the **MIT license**.
+This project is licensed under the **[MIT License](LICENSE)**.
 
 ---
 
