@@ -4,7 +4,7 @@ void initTimer() {
   TCCR0A = (1 << WGM01);
   TCCR0B = (1 << WGM02) | (1 << CS01) | (1 << CS00);
 
-  OCR0A = 124;
+  OCR0A = 124; //500ms
 
   TIMSK0 = (1 << OCIE0A);
 
