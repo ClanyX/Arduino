@@ -4,6 +4,7 @@ void initTimer(){
   TCCR1A = 0;
   TCCR1B = (1 << WGM12) | (1 << CS12) | (1 << CS10);
 
+  //16MHz / 1024 / (x + 1) = 2Hz
   OCR1A = 31249; //2s
 
   TIMSK1 = (1 << OCIE1A);
