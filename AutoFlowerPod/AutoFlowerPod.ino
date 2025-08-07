@@ -11,31 +11,29 @@
 ///variables
 U8GLIB_SSD1306_128X64 display(U8G_I2C_OPT_NONE);
 int humiditySensorData = 0;
-volatile int f_wdt = 0;
-int cicleCounter = 0;
+volatile bool f_wdt = false;
+volatile byte cycleCount = 0;
 
 int dryLevel = 500;   //when the sensor checked
 int pumpSpeed = 200;  //level of analog signal to pump
 int pumpTime = 5;     //seconds
-//  int interuptCounter = 150;  //8 second times 150 = 20 min
+int interuptCounter = 150;  //8 second times 150 = 20 min
 
 //just for test
-int interuptCounter = 2;
+//int interuptCounter = 5;
 
 ///interupt
 ISR(WDT_vect) {
-  if (f_wdt == 0) {
-    f_wdt = 1;
+  cycleCount++;
+  if (cycleCount >= interuptCounter) {
+    f_wdt = true;
+    cycleCount = 0;
   }
 }
 
 ///functions
 void testDirt() {
   humiditySensorData = analogRead(humiditySensor);
-
-  //delete
-  Serial.println(cicleCounter);
-  //
 
   //check the data - dry level
   if (humiditySensorData > dryLevel) {
@@ -52,21 +50,19 @@ void testDirt() {
 
 void enterSleep() {
   set_sleep_mode(SLEEP_MODE_PWR_DOWN);
-  sleep_enable();
   sleep_mode();
 
   //Here will program continue after the interupt stack 150 times
 
-  sleep_disable();
   power_all_enable();
 }
 
-void setupInterupt() {
-  MCUSR &= ~(1 << WDRF);
-
-  WDTCSR |= (1 << WDCE) | (1 << WDE);
-  WDTCSR = (1 << WDP3) | (0 << WDP2) | (0 << WDP1) | (1 << WDP0);
-  WDTCSR |= _BV(WDIE);
+void setupWatchDog() {
+  cli();
+  wdt_reset();
+  WDTCSR = (1 << WDCE) | (1 << WDE);
+  WDTCSR = (1 << WDIE) | (1 << WDP3) | (1 << WDP0);
+  sei();
 }
 
 void motorRun() {
@@ -85,20 +81,14 @@ void setup() {
   pinMode(pump, OUTPUT);
   digitalWrite(pump, LOW);
 
-  setupInterupt();
-
-  //delete
-  Serial.begin(9600);
-  //
+  setupWatchDog();
 }
 
 void loop() {
-  if (f_wdt != 1) return;
-  cicleCounter++;
-  if (cicleCounter == interuptCounter) {
+  enterSleep();
+
+  if (f_wdt) {
+    f_wdt = false;
     testDirt();
-    cicleCounter = 0;
-    enterSleep();
   }
-  f_wdt = 0;
 }
