@@ -9,10 +9,9 @@
 #define pump 5
 
 ///define variables
-#define dryLevel 500        //when the sensor checked
-#define pumpSpeed 200       //level of analog signal to pump
-#define pumpTime 5          //seconds
-#define interuptCounter 150 //8 second times 150 = 20 min
+#define dryLevel 530       //when the sensor checked
+#define pumpTime 5         //seconds
+#define interuptCounter 2 //8 second times 150 = 20 min
 
 ///variables
 U8GLIB_SSD1306_128X64 display(U8G_I2C_OPT_NONE);
@@ -296,9 +295,9 @@ void setupWatchDog() {
 }
 
 void motorRun() {
-  analogWrite(pump, pumpSpeed);
+  digitalWrite(pump, HIGH);
   delay(pumpTime * 1000);
-  analogWrite(pump, 0);
+  digitalWrite(pump, LOW);
 }
 
 void setup() {
